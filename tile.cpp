@@ -2109,8 +2109,8 @@ long long write_tile(decompressor *geoms, std::atomic<long long> *geompos_in, ch
 					if (attr_valid) {
 						add_sample_to(attribute_values, attr_numeric, attribute_values_increment, seq);
 						bool should_drop = arg->drop_by_attribute_descending
-							? (minattribute != HUGE_VAL && attr_numeric >= minattribute)
-							: (minattribute != -HUGE_VAL && attr_numeric <= minattribute);
+							? (minattribute != HUGE_VAL && attr_numeric > minattribute)
+							: (minattribute != -HUGE_VAL && attr_numeric < minattribute);
 						if (should_drop) {
 							can_stop_early = false;
 							if (drop_feature_unless_it_can_be_added_to_a_multiplier_cluster(layer, sf, layer_unmaps, strategy, drop_rest, arg->attribute_accum, key_pool)) {
@@ -2801,7 +2801,7 @@ long long write_tile(decompressor *geoms, std::atomic<long long> *geompos_in, ch
 							fprintf(stderr,
 								"Trying to keep features with '%s' %s %.6f to make it fit\n",
 								arg->drop_by_attribute_as_needed_attribute->c_str(),
-								desc ? "<" : ">",
+								desc ? "<=" : ">=",
 								minattribute);
 						}
 						line_detail++;
@@ -2970,7 +2970,7 @@ long long write_tile(decompressor *geoms, std::atomic<long long> *geompos_in, ch
 							arg->still_dropping = true;
 						}
 						if (!quiet) {
-							fprintf(stderr, "Going to try keeping features with attribute '%s' %s %0.6f to make it fit\n", arg->drop_by_attribute_as_needed_attribute->c_str(), desc2 ? "<" : ">", minattribute);
+							fprintf(stderr, "Going to try keeping features with attribute '%s' %s %0.6f to make it fit\n", arg->drop_by_attribute_as_needed_attribute->c_str(), desc2 ? "<=" : ">=", minattribute);
 						}
 						line_detail++;
 						continue;
